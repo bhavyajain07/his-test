@@ -141,13 +141,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 
 # Direct credential assignment (for development only)
-# AWS_ACCESS_KEY = 'AKIAYLZZKLOTYIXDAARY'
 AWL_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
-# AWS_SECRET_KEY = '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'
 AWS_SECRET_KEY = os.environ.get("AWS_SECRET_KEY")
-# AWS_REGION = 'ap-south-1'
 AWS_REGION = os.environ.get("AWS_REGION")
-# AWS_BUCKET_NAME = 'emirates-card-bucket4'
 AWS_BUCKET_NAME = os.environ.get("AWS_BUCKET_NAME")
-# OPENAI_API_KEY = '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'
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
