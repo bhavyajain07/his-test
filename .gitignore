@@ -1,2 +1,4 @@
 static/
 db.sqlite3
+__pycache__
+barcodes/
