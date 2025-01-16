@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .fc-event { 
+            cursor: pointer; 
+        }
+        .available { 
+            background-color: #28a745; 
+            border-color: #28a745;
+        }
+        .booked { 
+            background-color: #dc3545; 
+            border-color: #dc3545;
+        }
+        .card {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        .btn-primary {
+            padding: 8px 20px;
+        }
+        .container {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Book Appointment</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="appointmentForm">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Patient Name</label>
+                                <input type="text" class="form-control" name="patient_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Select Doctor</label>
+                                <select class="form-select" id="doctor" name="doctor" required>
+                                    <option value="">Choose a doctor</option>
+                                    {% for doctor in doctors %}
+                                    <option value="{{ doctor.id }}">{{ doctor.name }} - {{ doctor.department }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Select Date</label>
+                                <input type="date" class="form-control" id="appointment_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Available Time Slots</label>
+                                <select class="form-select" id="schedule_id" name="schedule_id" required>
+                                    <option value="">Select date first</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Book Appointment</button>
+                            <a href="{% url 'registration' %}" class="home_button">
+                                <h2 class="home_button">Home</h2>
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+                events: '/api/schedule/events/',
+                dateClick: function(info) {
+                    document.getElementById('appointment_date').value = info.dateStr;
+                    fetchAvailableSlots(info.dateStr);
+                },
+                eventDisplay: 'block',
+                displayEventTime: false,
+                eventClick: function(info) {
+                    const date = info.event.start;
+                    document.getElementById('appointment_date').value = date.toISOString().split('T')[0];
+                    fetchAvailableSlots(date.toISOString().split('T')[0]);
+                }
+            });
+            calendar.render();
+
+            // Function to fetch available slots
+            function fetchAvailableSlots(date) {
+                const doctorId = document.getElementById('doctor').value;
+                if (!doctorId) {
+                    alert('Please select a doctor first');
+                    return;
+                }
+                
+                fetch(`/api/available-slots/${doctorId}/${date}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const select = document.getElementById('schedule_id');
+                        select.innerHTML = '<option value="">Select a time slot</option>';
+                        
+                        if (data.status === 'success' && data.slots.length > 0) {
+                            data.slots.forEach(slot => {
+                                const option = document.createElement('option');
+                                option.value = slot.id;
+                                const startTime = new Date('1970-01-01T' + slot.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                const endTime = new Date('1970-01-01T' + slot.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                option.textContent = `${startTime} - ${endTime}`;
+                                select.appendChild(option);
+                            });
+                        } else {
+                            const option = document.createElement('option');
+                            option.value = "";
+                            option.textContent = "No available slots";
+                            select.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error fetching available slots');
+                    });
+            }
+
+            // Event listeners
+            document.getElementById('appointment_date').addEventListener('change', function() {
+                fetchAvailableSlots(this.value);
+            });
+
+            document.getElementById('doctor').addEventListener('change', function() {
+                const appointmentDate = document.getElementById('appointment_date').value;
+                if (appointmentDate) {
+                    fetchAvailableSlots(appointmentDate);
+                }
+            });
+
+            // Handle form submission
+            document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+
+                fetch('/appointment/book/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Appointment booked successfully!');
+                        calendar.refetchEvents();
+                        this.reset();
+                        document.getElementById('schedule_id').innerHTML = '<option value="">Select date first</option>';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error booking appointment');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

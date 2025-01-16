@@ -1,0 +1,149 @@
+<!-- templates/medical/tests_report.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Tests Report</title>
+    <!-- Include Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-bold mb-6">Medical Tests Report</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="mb-6">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-2">Select</th>
+                            <th class="text-left py-2">Test Code</th>
+                            <th class="text-left py-2">Test Name</th>
+                            <th class="text-right py-2">Price (AED)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="999">
+                            </td>
+                            <td class="py-2">CC001</td>
+                            <td class="py-2">Medicals for DEBRECEN University</td>
+                            <td class="text-right py-2">AED 999</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="150">
+                            </td>
+                            <td class="py-2">HC0013</td>
+                            <td class="py-2">GP Consultation</td>
+                            <td class="text-right py-2">AED 150</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="200">
+                            </td>
+                            <td class="py-2">HC0014</td>
+                            <td class="py-2">Ophthalmologist Consultation</td>
+                            <td class="text-right py-2">AED 200</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="200">
+                            </td>
+                            <td class="py-2">HC0015</td>
+                            <td class="py-2">ENT Consultation</td>
+                            <td class="text-right py-2">AED 200</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="200">
+                            </td>
+                            <td class="py-2">HC0016</td>
+                            <td class="py-2">Sample Collection By Gynaecologist</td>
+                            <td class="text-right py-2">AED 200</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="200">
+                            </td>
+                            <td class="py-2">HC0017</td>
+                            <td class="py-2">Spirometry /Pulmonary Function Test</td>
+                            <td class="text-right py-2">AED 200</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="200">
+                            </td>
+                            <td class="py-2">HC0018</td>
+                            <td class="py-2">Dental Doctor Consultation</td>
+                            <td class="text-right py-2">AED 200</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="350">
+                            </td>
+                            <td class="py-2">HC0019</td>
+                            <td class="py-2">General Oncologist Consultation</td>
+                            <td class="text-right py-2">AED 350</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-2">
+                                <input type="checkbox" class="test-checkbox" data-price="500">
+                            </td>
+                            <td class="py-2">HC0020</td>
+                            <td class="py-2">Specialist Oncologist Consultation</td>
+                            <td class="text-right py-2">AED 500</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                <div class="text-lg font-semibold">Total Amount:</div>
+                <div class="text-lg font-bold" id="total-amount">AED 0.00</div>
+            </div>
+            
+            <div id="auth-warning" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-center font-semibold">
+                Prior Authorization Required for amounts exceeding AED 1,000
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <a href="{% url 'registration' %}" class="home_button">
+            <h2 class="home_button">Home</h2>
+        </a>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.test-checkbox');
+        const totalAmountElement = document.getElementById('total-amount');
+        const authWarning = document.getElementById('auth-warning');
+        
+        function updateTotal() {
+            let total = 0;
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    total += parseFloat(checkbox.dataset.price);
+                }
+            });
+            
+            totalAmountElement.textContent = `AED ${total.toFixed(2)}`;
+            
+            if (total > 1000) {
+                authWarning.classList.remove('hidden');
+            } else {
+                authWarning.classList.add('hidden');
+            }
+        }
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateTotal);
+        });
+    });
+    </script>
+</body>
+</html>

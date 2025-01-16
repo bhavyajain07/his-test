@@ -1,0 +1,102 @@
+[
+    {
+        "model": "myapp.cptcode",
+        "pk": 1,
+        "fields": {
+            "code": "82947",
+            "description": "Glucose; quantitative, blood (except reagent strip)",
+            "fee": 120.00,
+            "icd10_codes": [1]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 2,
+        "fields": {
+            "code": "83036",
+            "description": "Hemoglobin; glycosylated (A1C)",
+            "fee": 150.00,
+            "icd10_codes": [1]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 3,
+        "fields": {
+            "code": "71045",
+            "description": "Chest X-ray, single view",
+            "fee": 175.00,
+            "icd10_codes": [3, 4]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 4,
+        "fields": {
+            "code": "93000",
+            "description": "Electrocardiogram, complete",
+            "fee": 200.00,
+            "icd10_codes": [3, 9]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 5,
+        "fields": {
+            "code": "85025",
+            "description": "Complete Blood Count (CBC)",
+            "fee": 105.00,
+            "icd10_codes": [2, 7] 
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 6,
+        "fields": {
+            "code": "87880",
+            "description": "Strep A test",
+            "fee": 95.00,
+            "icd10_codes": [2, 7]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 7,
+        "fields": {
+            "code": "72100",
+            "description": "X-ray of lower spine, 2 or 3 views",
+            "fee": 165.00,
+            "icd10_codes": [6]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 8,
+        "fields": {
+            "code": "80053",
+            "description": "Comprehensive Metabolic Panel",
+            "fee": 135.00,
+            "icd10_codes": [1, 5, 14]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 9,
+        "fields": {
+            "code": "81003",
+            "description": "Urinalysis, automated, without microscopy",
+            "fee": 85.00,
+            "icd10_codes": [11]  
+        }
+    },
+    {
+        "model": "myapp.cptcode",
+        "pk": 10,
+        "fields": {
+            "code": "80061",
+            "description": "Lipid Panel",
+            "fee": 145.00,
+            "icd10_codes": [10]  
+        }
+    }
+]

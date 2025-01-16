@@ -1,0 +1,137 @@
+[
+    {
+        "model": "myapp.icd10code",
+        "pk": 1,
+        "fields": {
+            "code": "E11.9",
+            "description": "Type 2 diabetes mellitus without complications",
+            "symptoms": [3, 4, 10]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 2,
+        "fields": {
+            "code": "J02.9",
+            "description": "Acute pharyngitis, unspecified",
+            "symptoms": [1, 7, 8]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 3,
+        "fields": {
+            "code": "I20.9",
+            "description": "Angina pectoris, unspecified",
+            "symptoms": [5, 6]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 4,
+        "fields": {
+            "code": "J45.909",
+            "description": "Unspecified asthma, uncomplicated",
+            "symptoms": [6, 5, 2]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 5,
+        "fields": {
+            "code": "K29.70",
+            "description": "Gastritis, unspecified, without bleeding",
+            "symptoms": [7, 2, 10]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 6,
+        "fields": {
+            "code": "M54.5",
+            "description": "Low back pain",
+            "symptoms": [9, 2]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 7,
+        "fields": {
+            "code": "J03.90",
+            "description": "Acute tonsillitis, unspecified",
+            "symptoms": [1, 7, 8, 6]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 8,
+        "fields": {
+            "code": "R51",
+            "description": "Headache",
+            "symptoms": [8, 7, 2]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 9,
+        "fields": {
+            "code": "I10",
+            "description": "Essential (primary) hypertension",
+            "symptoms": [8, 5, 2]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 10,
+        "fields": {
+            "code": "E78.0",
+            "description": "Pure hypercholesterolemia",
+            "symptoms": [2, 5]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 11,
+        "fields": {
+            "code": "N39.0",
+            "description": "Urinary tract infection, site not specified",
+            "symptoms": [1, 4, 7]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 12,
+        "fields": {
+            "code": "J40",
+            "description": "Bronchitis, not specified as acute or chronic",
+            "symptoms": [1, 6, 2]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 13,
+        "fields": {
+            "code": "M25.50",
+            "description": "Pain in unspecified joint",
+            "symptoms": [9, 2, 1]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 14,
+        "fields": {
+            "code": "K21.9",
+            "description": "Gastro-esophageal reflux disease without esophagitis",
+            "symptoms": [5, 7, 2]
+        }
+    },
+    {
+        "model": "myapp.icd10code",
+        "pk": 15,
+        "fields": {
+            "code": "F41.9",
+            "description": "Anxiety disorder, unspecified",
+            "symptoms": [6, 5, 8, 2]
+        }
+    }
+]

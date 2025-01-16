@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --background: #f8f9fa;
+            --white: #ffffff;
+            --border: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .submit-btn {
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .upload-container {
+            padding: 1.5rem;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-input-group {
+            text-align: center;
+        }
+
+        .file-input-label {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .process-btn {
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 200px;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        .process-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .upload-status {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .print-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: 1rem;
+    }
+
+    .print-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="form-section" id="emirates-upload-section">
+            <h2 class="section-title">Upload Emirates ID</h2>
+            <form id="emiratesUploadForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="upload-container">
+                    <div class="upload-grid">
+                        <div class="file-input-group">
+                            <label class="file-input-label">Front Side</label>
+                            <input type="file" id="emiratesFront" name="emirates_front" accept="image/*" required>
+                        </div>
+                        <div class="file-input-group">
+                            <label class="file-input-label">Back Side</label>
+                            <input type="file" id="emiratesBack" name="emirates_back" accept="image/*" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="process-btn">Process Emirates ID</button>
+                </div>
+                <div id="uploadStatus" class="upload-status"></div>
+            </form>
+        </div>
+        <form method="POST" action="{% url 'patient_registration' %}">
+            {% csrf_token %}
+            
+            <!-- Form 1: Basic Information -->
+            <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <select id="title" name="title" required>
+                            <option value="MR">Mr</option>
+                            <option value="MS">Ms</option>
+                            <option value="MRS">Mrs</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="middle_name">Middle Name</label>
+                        <input type="text" id="middle_name" name="middle_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patient_phone">Phone Number</label>
+                        <input type="text" id="patient_phone" name="patient_phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patient_email">Email</label>
+                        <input type="email" id="patient_email" name="patient_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="date_of_birth" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name='age' required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birth_time">Birth Time</label>
+                        <input type="time" id="birth_time" name="birth_time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="marital_status">Marital Status</label>
+                        <select id="marital_status" name="marital_status" required>
+                            <option value="SINGLE">Single</option>
+                            <option value="MARRIED">Married</option>
+                            <option value="DIVORCED">Divorced</option>
+                            <option value="WIDOWED">Widowed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                            <option value="O">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="patient_id">Patient ID</label>
+                        <input type="text" id="patient_id" name="patient_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue_date">Issue Date</label>
+                        <input type="date" id="issue_date" name="issue_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expiry_date">Expiry Date</label>
+                        <input type="date" id="expiry_date" name="expiry_date" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 2: Address -->
+            <div class="form-section">
+                <h2 class="section-title">Address Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="street">Street</label>
+                        <input type="text" id="street" name="street">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 3: Visa Details -->
+            <div class="form-section">
+                <h2 class="section-title">Visa Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="visa_number">Visa Number</label>
+                        <input type="text" id="visa_number" name="visa_number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visa_type">Visa Type</label>
+                        <input type="text" id="visa_type" name="visa_type" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visa_expiry">Visa Expiry</label>
+                        <input type="date" id="visa_expiry" name="visa_expiry" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 4: Insurance -->
+            <div class="form-section">
+                <h2 class="section-title">Insurance Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="insurance_name">Insurance Name</label>
+                        <input type="text" id="insurance_name" name="insurance_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="insurance_plan">Insurance Plan</label>
+                        <input type="text" id="insurance_plan" name="insurance_plan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="insurance_benefits">Insurance Benefits</label>
+                        <textarea id="insurance_benefits" name="insurance_benefits" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 5: Emergency Contact -->
+            <div class="form-section">
+                <h2 class="section-title">Emergency Contact</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="emergency_name">Name</label>
+                        <input type="text" id="emergency_name" name="emergency_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emergency_relationship">Relationship</label>
+                        <input type="text" id="emergency_relationship" name="emergency_relationship" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emergency_phone">Phone</label>
+                        <input type="tel" id="emergency_phone" name="emergency_phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emergency_email">Email</label>
+                        <input type="email" id="emergency_email" name="emergency_email" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 6: Family Details -->
+            <div class="form-section">
+                <h2 class="section-title">Family Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="family_name">Name</label>
+                        <input type="text" id="family_name" name="family_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="family_relationship">Relationship</label>
+                        <input type="text" id="family_relationship" name="family_relationship" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="family_contact">Contact</label>
+                        <input type="tel" id="family_contact" name="family_contact" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 7: Guarantor -->
+            <div class="form-section">
+                <h2 class="section-title">Guarantor Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="guarantor_name">Name</label>
+                        <input type="text" id="guarantor_name" name="guarantor_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor_relationship">Relationship</label>
+                        <input type="text" id="guarantor_relationship" name="guarantor_relationship" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor_contact">Contact</label>
+                        <input type="tel" id="guarantor_contact" name="guarantor_contact" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantor_address">Address</label>
+                        <textarea id="guarantor_address" name="guarantor_address" rows="3" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Register Patient</button>
+            
+            <div>
+                <a href="{% url 'registration' %}" class="home_button">
+                    <h2 class="home_button">Home</h2>
+                </a>
+            </div>
+        </form>
+    </div> 
+    <script>
+        // Calculate age automatically from DOB
+        document.getElementById('dob').addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            document.getElementById('age').value = age;
+        });
+
+        // Auto-generate display name from first, middle, and last name
+        function updateDisplayName() {
+            const firstName = document.getElementById('first_name').value;
+            const middleName = document.getElementById('middle_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const displayName = [firstName, middleName, lastName].filter(Boolean).join(' ');
+            document.getElementById('display_name').value = displayName;
+        }
+
+        ['first_name', 'middle_name', 'last_name'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateDisplayName);
+        });
+
+        document.getElementById('emiratesUploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const frontFile = document.getElementById('emiratesFront').files[0];
+            const backFile = document.getElementById('emiratesBack').files[0];
+            
+            formData.append('emirates_front', frontFile);
+            formData.append('emirates_back', backFile);
+            
+            document.getElementById('uploadStatus').innerHTML = 'Processing Emirates ID...';
+            
+            fetch('/process-emirates-id/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            // In your template's JavaScript, update this part
+            .then(response => {
+                if (response.success) {
+                    const data = response.data;
+                    console.log("Received data:", data);  // Debug print
+                    
+                    // Basic Information
+                    document.getElementById('first_name').value = data.first_name || '';
+                    document.getElementById('middle_name').value = data.middle_name || '';
+                    document.getElementById('last_name').value = data.last_name || '';
+                    
+                    // Dates
+                    document.getElementById('dob').value = data.date_of_birth || '';  // Changed from date_of_birth to dob
+                    document.getElementById('issue_date').value = data.issue_date || '';
+                    document.getElementById('expiry_date').value = data.expiry_date || '';
+                    
+                    // ID
+                    document.getElementById('patient_id').value = data.id_number || '';
+                    
+                    // Trigger age calculation
+                    document.getElementById('dob').dispatchEvent(new Event('change'));
+                    
+                    // Add debug prints
+                    console.log("Setting DOB to:", data.date_of_birth);
+                    console.log("Setting issue date to:", data.issue_date);
+                    console.log("Setting expiry date to:", data.expiry_date);
+                    console.log("Setting patient ID to:", data.id_number);
+                    
+                    document.getElementById('uploadStatus').innerHTML = 'Data extracted successfully!';
+                    document.getElementById('uploadStatus').style.color = 'green';
+                } else {
+                    document.getElementById('uploadStatus').innerHTML = 'Error: ' + response.error;
+                    document.getElementById('uploadStatus').style.color = 'red';
+                }
+            })
+            .catch(error => {
+                console.error("Error during auto-fill:", error);  // Debug print
+                document.getElementById('uploadStatus').innerHTML = 'Error processing Emirates ID';
+                document.getElementById('uploadStatus').style.color = 'red';
+            });
+        });
+
+        
+
+        
+    </script>
+</body>
+</html>
+

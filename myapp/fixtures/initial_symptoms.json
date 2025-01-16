@@ -1,0 +1,92 @@
+[
+    {
+        "model": "myapp.symptom",
+        "pk": 1,
+        "fields": {
+            "name": "Fever",
+            "description": "Elevated body temperature",
+            "category": "GENERAL"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 2,
+        "fields": {
+            "name": "Fatigue",
+            "description": "Feeling of tiredness or exhaustion",
+            "category": "GENERAL"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 3,
+        "fields": {
+            "name": "Increased thirst",
+            "description": "Excessive thirst sensation",
+            "category": "ENDOCRINE"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 4,
+        "fields": {
+            "name": "Frequent urination",
+            "description": "Urinating more often than usual",
+            "category": "ENDOCRINE"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 5,
+        "fields": {
+            "name": "Chest pain",
+            "description": "Pain or discomfort in chest",
+            "category": "CARDIOVASCULAR"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 6,
+        "fields": {
+            "name": "Shortness of breath",
+            "description": "Difficulty breathing",
+            "category": "RESPIRATORY"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 7,
+        "fields": {
+            "name": "Nausea",
+            "description": "Feeling of sickness with inclination to vomit",
+            "category": "GASTROINTESTINAL"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 8,
+        "fields": {
+            "name": "Headache",
+            "description": "Pain in head or neck region",
+            "category": "NEUROLOGICAL"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 9,
+        "fields": {
+            "name": "Joint pain",
+            "description": "Pain in joints",
+            "category": "MUSCULOSKELETAL"
+        }
+    },
+    {
+        "model": "myapp.symptom",
+        "pk": 10,
+        "fields": {
+            "name": "Weight loss",
+            "description": "Unexplained decrease in body weight",
+            "category": "ENDOCRINE"
+        }
+    }
+]

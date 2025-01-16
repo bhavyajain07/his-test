@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Patient</title>
+    
+    <!-- Required CSS files -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .search-container {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-card {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #1de9b6;
+            border-color: #1de9b6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #00bfa5;
+            border-color: #00bfa5;
+            color: #fff;
+        }
+
+        .input-group-text {
+            background-color: transparent;
+            border-right: none;
+        }
+
+        .form-control {
+            border-left: none;
+        }
+
+        .form-control:focus {
+            border-color: #ced4da;
+            box-shadow: none;
+        }
+
+        .update-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            border-left: 4px solid #1de9b6;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .alert {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .alert-success {
+            background-color: #e3fcf7;
+            border-color: #1de9b6;
+            color: #00897b;
+        }
+
+        .alert .feather {
+            width: 18px;
+            height: 18px;
+            vertical-align: text-bottom;
+        }
+
+        .alert.fade.show {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .form-control:focus {
+            border-color: #1de9b6;
+            box-shadow: 0 0 0 0.2rem rgba(29, 233, 182, 0.25);
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            color: #1de9b6;
+        }
+
+        /* Error message styling */
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+
+        /* Required field indicator */
+        .required-field::after {
+            content: "*";
+            color: #dc3545;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Button -->
+    <a href="{% url 'registration' %}" class="btn btn-primary home-button">
+        <i data-feather="home" class="me-2"></i>
+        Home
+    </a>
+
+    <!-- Search Container -->
+    {% if not patient_form %}
+    <div class="container search-container">
+        <div class="card search-card">
+            <div class="card-header">
+                <h3 class="mb-4">Update Patient</h3>
+                <form method="GET">
+                    {% csrf_token %}
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i data-feather="search"></i>
+                                </span>
+                                <input type="text" name="patient_id" class="form-control" placeholder="Enter Patient ID" required>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" type="submit">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Success Message -->
+    {% if success_message %}
+    <div class="container">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i data-feather="check-circle" class="me-2"></i>
+            {{ success_message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Update Form -->
+    {% if patient_form %}
+    <div class="container update-form">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="patient_id" value="{{ patient_form.instance.patient_id }}">
+            
+            <div class="form-section">
+                <div class="section-header">
+                    <i data-feather="user" class="section-icon"></i>
+                    Patient Information
+                </div>
+                {% for field in patient_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required-field{% endif %}">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-section">
+                <div class="section-header">
+                    <i data-feather="phone" class="section-icon"></i>
+                    Emergency Contacts
+                </div>
+                {% for form in emergency_forms %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required-field{% endif %}">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+            <div class="form-section">
+                <div class="section-header">
+                    <i data-feather="users" class="section-icon"></i>
+                    Family Members
+                </div>
+                {% for form in family_forms %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required-field{% endif %}">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+            <div class="form-section">
+                <div class="section-header">
+                    <i data-feather="shield" class="section-icon"></i>
+                    Guarantors
+                </div>
+                {% for form in guarantor_forms %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required-field{% endif %}">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-4 mb-5">
+                <button type="submit" class="btn btn-primary">
+                    <i data-feather="save" class="me-2"></i>
+                    Update Patient
+                </button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Required JS files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize Feather icons
+        feather.replace();
+
+        // Auto-hide success message after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertElement = document.querySelector('.alert-success');
+            if (alertElement) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alertElement);
+                    bsAlert.close();
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

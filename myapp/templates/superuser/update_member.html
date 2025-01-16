@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Member</title>
+</head>
+<body>
+    <h1>Update Member Information</h1>
+    
+    <!-- Step 1: Ask for Patient ID -->
+    {% if not member_form %}
+        <form method="get">
+            {% csrf_token %}
+            <label for="username">Enter Username</label>
+            <input type="text" name="username" id="username" required>
+            <button type="submit">Fetch Details</button>
+        </form>
+    {% endif %}
+
+    {% if member_form %}
+        <form method="POST">
+            {% csrf_token %}
+            <h2>Member Information</h2>
+            {{ member_form.as_p }}
+
+            <button type="submit">Update</button>
+        </form>
+    {% endif %}
+    <div>
+        <a href="{% url 'superuser' %}" class="home_button">
+            <h2 class="home_button">Home</h2>
+        </a>
+    </div>
+</body>
+</html>

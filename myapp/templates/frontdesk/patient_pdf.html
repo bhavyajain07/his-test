@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .info-row {
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: bold;
+            color: #34495e;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Hospital Management System</h1>
+        <p>Patient Details Report</p>
+        <p>Generated on: {{ registration_date }}</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Basic Information</div>
+        <div class="info-row">
+            <span class="label">Patient ID:</span> {{ patient.patient_id }}
+        </div>
+        <div class="info-row">
+            {{ patient.barcode }}
+        </div>
+        <div class="info-row">
+            <span class="label">MRN Number:</span> {{ patient.mrn_number }}
+        </div>
+        <div class="info-row">
+            <span class="label">Name:</span> {{ patient.title }} {{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}
+        </div>
+        <div class="info-row">
+            <span class="label">Date of Birth:</span> {{ patient.date_of_birth }}
+        </div>
+        <div class="info-row">
+            <span class="label">Gender:</span> {{ patient.gender }}
+        </div>
+        <div class="info-row">
+            <span class="label">Phone:</span> {{ patient.patient_phone }}
+        </div>
+        <div class="info-row">
+            <span class="label">Email:</span> {{ patient.patient_email }}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Address</div>
+        <div class="info-row">
+            <span class="label">Street:</span> {{ patient.street }}
+        </div>
+        <div class="info-row">
+            <span class="label">City:</span> {{ patient.city }}
+        </div>
+        <div class="info-row">
+            <span class="label">State:</span> {{ patient.state }}
+        </div>
+        <div class="info-row">
+            <span class="label">Country:</span> {{ patient.country }}
+        </div>
+    </div>
+
+    {% if emergency_contact %}
+    <div class="section">
+        <div class="section-title">Emergency Contact</div>
+        <div class="info-row">
+            <span class="label">Name:</span> {{ emergency_contact.emergency_name }}
+        </div>
+        <div class="info-row">
+            <span class="label">Relationship:</span> {{ emergency_contact.emergency_relationship }}
+        </div>
+        <div class="info-row">
+            <span class="label">Phone:</span> {{ emergency_contact.emergency_phone }}
+        </div>
+        <div class="info-row">
+            <span class="label">Email:</span> {{ emergency_contact.emergency_email }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="section">
+        <div class="section-title">Insurance Information</div>
+        <div class="info-row">
+            <span class="label">Insurance Name:</span> {{ patient.insurance_name }}
+        </div>
+        <div class="info-row">
+            <span class="label">Insurance Plan:</span> {{ patient.insurance_plan }}
+        </div>
+        <div class="info-row">
+            <span class="label">Insurance Benefits:</span> {{ patient.insurance_benefits }}
+        </div>
+    </div>
+</body>
+</html>
