@@ -7,7 +7,7 @@ amazon-textract-textractor==1.8.5
 annotated-types==0.7.0
 anyio==4.7.0
 arabic-reshaper==3.0.0
-asgiref==3.8.1
+asgiref==2.1
 asn1crypto==1.5.1
 async-timeout==3.0.1
 attrs==24.3.0
