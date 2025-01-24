@@ -16,20 +16,20 @@ class EmiratesIDProcessor:
         # Initialize AWS clients with credentials from kwargs
         self.s3_client = boto3.client(
             's3',
-            aws_access_key_id=kwargs.get('aws_access_key'),
-            aws_secret_access_key=kwargs.get('aws_secret_key'),
-            region_name=kwargs.get('aws_region')
+            aws_access_key_id=kwargs.get('AWS_ACCESS_KEY'),
+            aws_secret_access_key=kwargs.get('AWS_SECRET_KEY'),
+            region_name=kwargs.get('AWS_REGION')
         )
         
         self.textract_client = boto3.client(
             'textract',
-            aws_access_key_id=kwargs.get('aws_access_key'),
-            aws_secret_access_key=kwargs.get('aws_secret_key'),
-            region_name=kwargs.get('aws_region')
+            aws_access_key_id=kwargs.get('AWS_ACCESS_KEY'),
+            aws_secret_access_key=kwargs.get('AWS_SECRET_KEY'),
+            region_name=kwargs.get('AWS_REGION')
         )
         
         self.bucket_name = kwargs.get('bucket_name')
-        os.environ["OPENAI_API_KEY"] = kwargs.get('openai_key')
+        os.environ["OPENAI_API_KEY"] = kwargs.get('OPENAI_API_KEY')
 
     def upload_to_s3(self, file, filename, folder="cards"):
         try:
