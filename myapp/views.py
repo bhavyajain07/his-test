@@ -967,7 +967,7 @@ def pharmacist_prescriptions(request):
     prescriptions = Prescription.objects.filter(
         status='PRESCRIBED'
     ).order_by('-prescribed_date')
-    return render(request, 'pharmacy/prescription_list.html', {
+    return render(request, 'pharmacist/prescription_list.html', {
         'prescriptions': prescriptions
     })
 
