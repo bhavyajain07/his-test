@@ -633,7 +633,7 @@ def doctor_schedule_view(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
     
     doctors = Doctor.objects.all()
-    return render(request, 'admin\doctor_schedule.html', {'doctors': doctors})
+    return render(request, 'admin/doctor_schedule.html', {'doctors': doctors})
 
 def appointment_booking_view(request):
     if request.method == 'POST':
