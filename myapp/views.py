@@ -24,6 +24,11 @@ from django.conf import settings
 import os
 import io
 from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import VitalSigns, PatientDiagnosis
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 
@@ -72,6 +77,9 @@ def clear_patient_registration(request):
 
 def useradmin(request):
     return render(request, 'admin/admin_home.html')
+
+def pharmacist(request):
+    return render(request, 'pharmacist/prescription_list.html')
 
 def superuser(request):
     return render(request, "superuser/superuser.html")
@@ -334,8 +342,6 @@ def generate_patient_pdf(request, patient_id):
         print("General error:", str(e))  # Add this for debugging
         return HttpResponse(f'Error: {str(e)}', status=500)
 
-
-
 def generate_id_card(request, patient_id):
     try:
         # Get patient
@@ -582,10 +588,10 @@ def user_login(request):
                     return redirect('registration')
                 elif user.designation == 'nu':
                     print("nurse logged in")
-                    return redirect('nurse')
+                    return redirect('nurse_dashboard')
                 elif user.designation == 'ph':
                     print("pharmacist logged in")
-                    return redirect('pharmacyst')
+                    return redirect('pharmacist_prescriptions')
             else:
                 messages.error(request, 'Invalid username or password.')
     else:
@@ -1043,10 +1049,6 @@ def nurse_dashboard(request):
         'active_patients': active_patients
     })
 
-# views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import VitalSigns, PatientDiagnosis
-
 def record_vitals(request, diagnosis_id):
     diagnosis = get_object_or_404(PatientDiagnosis, id=diagnosis_id)
     
@@ -1080,10 +1082,6 @@ def view_vitals(request, diagnosis_id):
         'diagnosis': diagnosis,
         'vital_signs': vital_signs
     })
-
-# views.py
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def save_vitals(request, diagnosis_id):
