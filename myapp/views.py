@@ -78,9 +78,6 @@ def clear_patient_registration(request):
 def useradmin(request):
     return render(request, 'admin/admin_home.html')
 
-def pharmacist(request):
-    return render(request, 'pharmacist/prescription_list.html')
-
 def superuser(request):
     return render(request, "superuser/superuser.html")
 
@@ -539,7 +536,6 @@ def delete_member(request):
         return redirect('superuser')
 
     return render(request, 'superuser/delete_member.html')
-
 
 @csrf_protect
 def user_login(request):
