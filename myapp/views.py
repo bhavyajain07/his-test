@@ -24,11 +24,6 @@ from django.conf import settings
 import os
 import io
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import VitalSigns, PatientDiagnosis
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
 
 
 
@@ -75,11 +70,39 @@ def clear_patient_registration(request):
 
     return render(request, 'frontdesk/patient_registration.html', context)
 
+from datetime import date
+
 def useradmin(request):
-    return render(request, 'admin/admin_home.html')
+    total_schedules = Schedule.objects.count()
+    total_doctors = Doctor.objects.count()
+    doctors = Doctor.objects.all()
+    
+    context = {
+        'total_schedules': total_schedules,
+        'total_doctors': total_doctors,
+        'doctors': doctors,
+        'today': date.today()
+    }
+    return render(request, 'admin/admin_home.html', context)
 
 def superuser(request):
-    return render(request, "superuser/superuser.html")
+    total_members = People.objects.count()
+    new_members = People.objects.filter(last_login__isnull=True).count()
+    
+    recent_activities = []
+    for member in People.objects.exclude(last_login__isnull=True).order_by('-last_login')[:5]:
+        recent_activities.append({
+            'member_name': f"{member.member_fname} {member.member_lname}",
+            'action': 'Last login',
+            'date': member.last_login
+        })
+    
+    context = {
+        'total_members': total_members,
+        'new_members': new_members,
+        'recent_activities': recent_activities
+    }
+    return render(request, "superuser/superuser.html", context)
 
 def tests_report(request):
     return render(request, 'frontdesk/test_reports.html')
@@ -339,6 +362,8 @@ def generate_patient_pdf(request, patient_id):
         print("General error:", str(e))  # Add this for debugging
         return HttpResponse(f'Error: {str(e)}', status=500)
 
+
+
 def generate_id_card(request, patient_id):
     try:
         # Get patient
@@ -537,6 +562,7 @@ def delete_member(request):
 
     return render(request, 'superuser/delete_member.html')
 
+
 @csrf_protect
 def user_login(request):
     next_url = request.GET.get("next", None)
@@ -633,7 +659,7 @@ def doctor_schedule_view(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
     
     doctors = Doctor.objects.all()
-    return render(request, 'admin/doctor_schedule.html', {'doctors': doctors})
+    return render(request, 'admin\doctor_schedule.html', {'doctors': doctors})
 
 def appointment_booking_view(request):
     if request.method == 'POST':
@@ -967,7 +993,7 @@ def pharmacist_prescriptions(request):
     prescriptions = Prescription.objects.filter(
         status='PRESCRIBED'
     ).order_by('-prescribed_date')
-    return render(request, 'pharmacist/prescription_list.html', {
+    return render(request, 'pharmacy/prescription_list.html', {
         'prescriptions': prescriptions
     })
 
@@ -1045,6 +1071,10 @@ def nurse_dashboard(request):
         'active_patients': active_patients
     })
 
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import VitalSigns, PatientDiagnosis
+
 def record_vitals(request, diagnosis_id):
     diagnosis = get_object_or_404(PatientDiagnosis, id=diagnosis_id)
     
@@ -1078,6 +1108,10 @@ def view_vitals(request, diagnosis_id):
         'diagnosis': diagnosis,
         'vital_signs': vital_signs
     })
+
+# views.py
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def save_vitals(request, diagnosis_id):
@@ -1116,3 +1150,72 @@ def save_vitals(request, diagnosis_id):
         'status': 'error',
         'message': 'Invalid request method'
     }, status=405)
+
+
+
+def superuser_dashboard(request):
+    total_members = People.objects.count()
+    new_members = People.objects.filter(created_at__gte=datetime.now() - timedelta(days=30)).count()
+    
+    recent_activities = MemberActivity.objects.all().order_by('-timestamp')[:5]
+    
+    context = {
+        'total_members': total_members,
+        'new_members': new_members,
+        'recent_activities': recent_activities
+    }
+    return render(request, 'superuser/superuser.html', context)
+
+
+def view_doctor_schedules(request):
+    # Handle date and doctor filtering
+    doctor_filter = request.GET.get('doctor', '')
+    date_filter = request.GET.get('date', '')
+    
+    # Base queryset
+    schedules = Schedule.objects.select_related('doctor').all()
+    
+    # Apply filters
+    if doctor_filter:
+        schedules = schedules.filter(doctor_id=doctor_filter)
+    
+    if date_filter:
+        schedules = schedules.filter(date=date_filter)
+    
+    # Get list of doctors for filter dropdown
+    doctors = Doctor.objects.all()
+    
+    context = {
+        'schedules': schedules,
+        'doctors': doctors,
+        'selected_doctor': doctor_filter,
+        'selected_date': date_filter
+    }
+    
+    return render(request, 'admin/view_schedules.html', context)
+
+
+def doctor(request):
+    patient_data = None
+    error_message = None
+    
+    if request.method == "POST":
+        patient_id = request.POST.get('patient_id')
+        try:
+            patient = get_object_or_404(Patient, patient_id=patient_id)
+            patient_data = {
+                'patient': patient,
+                'latest_diagnosis': PatientDiagnosis.objects.filter(patient_id=patient).last()
+            }
+        except:
+            error_message = f"Patient with ID {patient_id} not found."
+
+    context = {
+        'total_patients': Patient.objects.count(),
+        'total_diagnoses': PatientDiagnosis.objects.count(),
+        'active_treatments': TreatmentProcedure.objects.filter(status='IN_PROGRESS').count(),
+        'patient_data': patient_data,
+        'error_message': error_message,
+    }
+    
+    return render(request, 'doctor/doctor_home.html', context)
