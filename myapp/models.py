@@ -139,7 +139,6 @@ class People(models.Model):
     member_email = models.CharField(max_length=100)
     member_dob = models.DateField()
     last_login = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.member_dob = str(self.member_dob)
@@ -441,11 +440,3 @@ class VitalSigns(models.Model):
 
     class Meta:
         verbose_name_plural = "Vital Signs"
-
-class MemberActivity(models.Model):
-    member = models.ForeignKey(People, on_delete=models.CASCADE)
-    action = models.CharField(max_length=100)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    
-    def __str__(self):
-        return f"{self.member.username} - {self.action}"
