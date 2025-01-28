@@ -1,128 +1,388 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthcare Information System</title>
+    <title>Healthcare Information System - Admin</title>
+    
+    <!-- CSS Files -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #2c3e50;
+            --primary: #1de9b6;
             --secondary: #3498db;
             --accent: #e74c3c;
-            --background: #f8f9fa;
+            --background: #f5f5f5;
             --white: #ffffff;
+            --sidebar-width: 250px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Public Sans', sans-serif;
         }
 
         body {
             background-color: var(--background);
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1200px;
-            height:500px;
-            margin: 0 auto;
+        /* Sidebar Styles */
+        .pc-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--white);
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            z-index: 1040;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-logo {
+            height: 90px;
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            padding: 5px;
+            border: 2px solid var(--primary);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 10px;
+        }
+
+        .menu-item {
+            margin-bottom: 10px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .menu-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Navbar Styles */
+        .pc-navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: 70px;
+            background: var(--white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 1030;
+            padding: 0 20px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-tools {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Main Container and Cards */
+        .pc-container {
+            margin-left: var(--sidebar-width);
+            margin-top: 70px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
         .module-card {
             background: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--primary);
-            width: 300px;
-            text-align: center;
+            height: 100%;
+            margin-bottom: 40px;
         }
 
-        .module-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        /* Activity Card and Responsive */
+        .activity-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .card-title {
-            font-size: 1.5rem;
+        .activity-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #f8f9fa;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item h6 {
+            color: #2c3e50;
             font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 1rem;
         }
 
-        .card-description {
-            color: #666;
-            line-height: 1.6;
+        @media (max-width: 768px) {
+            .pc-sidebar {
+                left: -250px;
+            }
+            
+            .pc-navbar,
+            .pc-container {
+                left: 0 !important;
+                width: 100% !important;
+            }
         }
 
-        .icon {
-            font-size: 2rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
+        .sidebar-collapsed .pc-sidebar {
+            left: -250px;
         }
 
-        .home_button{
-            justify-content: center;
-            align-items: center;
-            display: flex;
-            padding: 10px 20px;
-            width: 100px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            right: 0;
-            bottom: 0;
+        .sidebar-collapsed .pc-navbar,
+        .sidebar-collapsed .pc-container {
+            left: 0 !important;
+            margin-left: 0 !important;
+            width: 100% !important;
+            transition: all 0.3s ease;
         }
+
+        .pc-container {
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Background Colors */
+        .bg-light-primary { background-color: rgba(29, 233, 182, 0.1); }
+        .bg-light-success { background-color: rgba(40, 199, 111, 0.1); }
+        .bg-light-warning { background-color: rgba(255, 159, 67, 0.1); }
+        .bg-light-danger { background-color: rgba(234, 84, 85, 0.1); }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
-            {% endfor %}
+    <!-- Sidebar -->
+    <div class="pc-sidebar">
+        <div class="sidebar-logo">
+            <img src="{% static 'assets\images\user\avatar-2.jpg' %}" alt="Logo">
         </div>
-        {% endif %}
-
-        <a href="{% url 'search_member' %}" class="module-card">
-            <div class="icon">👤</div>
-            <h2 class="card-title">Search Member</h2>
-        </a>
-
-        <a href="{% url 'member_registration' %}" class="module-card">
-            <div class="icon">👤</div>
-            <h2 class="card-title">Add Member</h2>
-        </a>
-
-        <a href="{% url 'update_member' %}" class="module-card">
-            <div class="icon">👤</div>
-            <h2 class="card-title">Update Member</h2>
-        </a>
-        <a href="{% url 'update_member' %}" class="module-card">
-            <div class="icon">👤</div>
-            <h2 class="card-title">Delete Member</h2>
-        </a>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="{% url 'search_member' %}" class="menu-link">
+                    <i class="fas fa-search menu-icon"></i>
+                    <span>Search Member</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'member_registration' %}" class="menu-link">
+                    <i class="fas fa-user-plus menu-icon"></i>
+                    <span>Add Member</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'update_member' %}" class="menu-link">
+                    <i class="fas fa-user-edit menu-icon"></i>
+                    <span>Update Member</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'delete_member' %}" class="menu-link">
+                    <i class="fas fa-user-minus menu-icon"></i>
+                    <span>Delete Member</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <div>
-        <a href="{% url 'logout' %}" class="logout_button">
-            <h2 class="logout_button">Logout</h2>
-        </a>
+    <!-- Navbar -->
+    <nav class="pc-navbar">
+        <div class="d-flex justify-content-between align-items-center h-100">
+            <div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="navbar-tools">
+                <div class="tool-item">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge bg-danger badge-notify">2</span>
+                </div>
+                <div class="tool-item">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="tool-item">
+                    <img src="{% static 'assets/images/user/avatar-2.jpg' %}" alt="User" class="rounded-circle" width="32">
+                </div>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+<div class="pc-container">
+    <!-- Statistics Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="icon-box bg-light-primary">
+                    <i class="fas fa-users text-primary"></i>
+                </div>
+                <h3 class="mt-3">{{ total_members }}</h3>
+                <p class="text-muted mb-0">Total Members</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="icon-box bg-light-success">
+                    <i class="fas fa-user-plus text-success"></i>
+                </div>
+                <h3 class="mt-3">{{ new_members }}</h3>
+                <p class="text-muted mb-0">New Members</p>
+            </div>
+        </div>
     </div>
-    
+
+    <!-- Module Cards -->
+    <div class="row g-4 module-cards">
+        <div class="col-md-4 col-xl-3">
+            <a href="{% url 'search_member' %}" class="text-decoration-none">
+                <div class="module-card">
+                    <div class="icon-box bg-light-primary mb-3">
+                        <i class="fas fa-search text-primary"></i>
+                    </div>
+                    <h5>Search Member</h5>
+                    <p class="text-muted mb-0">Quick search and access member records</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 col-xl-3">
+            <a href="{% url 'member_registration' %}" class="text-decoration-none">
+                <div class="module-card">
+                    <div class="icon-box bg-light-success mb-3">
+                        <i class="fas fa-user-plus text-success"></i>
+                    </div>
+                    <h5>Add Member</h5>
+                    <p class="text-muted mb-0">Register new members with details</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 col-xl-3">
+            <a href="{% url 'update_member' %}" class="text-decoration-none">
+                <div class="module-card">
+                    <div class="icon-box bg-light-warning mb-3">
+                        <i class="fas fa-user-edit text-warning"></i>
+                    </div>
+                    <h5>Update Member</h5>
+                    <p class="text-muted mb-0">Modify existing member information</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 col-xl-3">
+            <a href="{% url 'delete_member' %}" class="text-decoration-none">
+                <div class="module-card">
+                    <div class="icon-box bg-light-danger mb-3">
+                        <i class="fas fa-user-minus text-danger"></i>
+                    </div>
+                    <h5>Delete Member</h5>
+                    <p class="text-muted mb-0">Remove member records</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+        <h5 class="mb-4 text-primary">Recent Member Activities</h5>
+        {% for activity in recent_activities %}
+        <div class="activity-item p-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="mb-1 fw-bold">{{ activity.member_name }}</h6>
+                    <p class="text-muted mb-0">{{ activity.action }}</p>
+                </div>
+                <span class="badge bg-primary">{{ activity.date|date:"d M Y" }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('sidebar-toggle').addEventListener('click', function() {
+        document.body.classList.toggle('sidebar-collapsed');
+        const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+        localStorage.setItem('sidebar-collapsed', isCollapsed);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+        if (isCollapsed) {
+            document.body.classList.add('sidebar-collapsed');
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+            const sidebar = document.querySelector('.pc-sidebar');
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            
+            if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                document.body.classList.add('sidebar-collapsed');
+            }
+        }
+    });
+</script>
 </body>
 </html>
